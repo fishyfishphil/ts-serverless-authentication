@@ -13,15 +13,7 @@ export class Provider {
 		this.config = config;
 	}
 
-	signin(config: {
-		signin_uri: string,
-		scope?: string, 
-		state?: string, 
-		response_type?: string, 
-		access_type?: string,
-		prompt?: string
-	}) {
-
+	signin(config: IProviderOptions) {
 		if (!this.config.id || !this.config.redirect_uri) {
 			const message = `Invalid sign in params. client_id: '${this.config.id}' redirect_uri: '${this.config.redirect_uri}'`;
 			throw new Error(message);

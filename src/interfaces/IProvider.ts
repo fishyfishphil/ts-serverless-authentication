@@ -1,11 +1,12 @@
 import { Profile } from "../profile";
 
 export interface IProviderOptions {
-	authorization_url?: string,
-	signin_uri?: string,
-	scope?: string,
-	state?: string,
-	profile_uri?: string
+	signin_uri: string,
+	scope?: string, 
+	state?: string, 
+	response_type?: string, 
+	access_type?: string,
+	prompt?: string
 }
 
 export interface IProviderCallback {
