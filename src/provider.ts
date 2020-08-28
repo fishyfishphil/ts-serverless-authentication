@@ -62,7 +62,7 @@ export class Provider {
 							const accessData = await axios.get(url);
 							return accessData;
 						} catch (error) {
-							throw new Error(error);							
+							throw new Error(`attempAuthorize error GET ${error}`);
 						}
 					}
 					else {
@@ -70,7 +70,7 @@ export class Provider {
 							const accessData = await axios.post(options.authorization_uri || '', { form: payload });
 							return accessData;
 						} catch (error) {
-							throw new Error(error);
+							throw new Error(`attempAuthorize error not GET ${error}`);
 						}
 					}
 				}
@@ -80,11 +80,11 @@ export class Provider {
 						throw new Error('No access data');
 					}
 
-					const { access_token, refresh_token } = JSON.parse(accessData);
+					const { access_token, refresh_token } = accessData;
 					const profileToken = { ...access_token, ...profile };
 					const url = Utils.urlBuilder(
 						options.profile_uri || '',
-						{ ...access_token , ...profile }
+						profileToken
 					);
 
 					try {
@@ -98,7 +98,7 @@ export class Provider {
 							: profileJson
 						return mappedProfile;
 					} catch (error) {
-						throw new Error(error);						
+						throw new Error(`createMappedProfile error ${error}`);
 					}
 				}
 			
