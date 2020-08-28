@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const { Profile } = require('./index')
+const { Profile } = require('../lib/index')
 
 describe('Profile', () => {
   beforeAll(() => {
