@@ -13,7 +13,7 @@ export class Provider {
 		this.config = config;
 	}
 
-	signin(config: IProviderOptions) {
+	public signin(config: IProviderOptions) {
 		if (!this.config.id || !this.config.redirect_uri) {
 			const message = `Invalid sign in params. client_id: '${this.config.id}' redirect_uri: '${this.config.redirect_uri}'`;
 			throw new Error(message);
@@ -32,7 +32,7 @@ export class Provider {
 		return { url };
 	};
 
-	async callback(
+	public async callback(
 		config: IProviderCallback,
 		options: IProviderCallbackOptions,
 		additionalParams: IProviderCallbackAdditionalParams

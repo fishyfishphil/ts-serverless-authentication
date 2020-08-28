@@ -43,7 +43,7 @@ export class Utils {
 	 * @param data {object}
 	 * @param config {object} with token_secret --> change to secret
 	 */
-	static createToken(data: any, secret: string, options: any) {
+	static createToken(data: object, secret: string, options: object) {
 		return jwt.sign(data, secret, options);
 	}
 
@@ -52,7 +52,7 @@ export class Utils {
 	 * @param token {string}
 	 * @param config {object} with token_secret --> change to secret
 	 */
-	static readToken(token: string, secret: string, options: any) {
+	static readToken(token: string, secret: string, options: object) {
 		return jwt.verify(token, secret, options);
 	}
 

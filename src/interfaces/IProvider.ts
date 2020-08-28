@@ -18,7 +18,7 @@ export interface IProviderCallbackOptions {
 	authorization_uri?: string,
 	authorizationMethod?: string,
 	profile_uri?: string,
-	profileMap?: (response: any) => Profile
+	profileMap?: (response: object) => Profile
 }
 
 export interface IProviderCallbackAdditionalParams {

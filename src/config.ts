@@ -59,7 +59,7 @@ export class Config {
     });
   }
 
-  getConfig(provider: string) {
+  public getConfig(provider: string) {
     let result: IConfigValues = {};
     if (provider) {
       const configProvider = provider.replace(/-/g, '_');
