@@ -9,9 +9,12 @@ export interface IProviderOptions {
 	prompt?: string
 }
 
-export interface IProviderCallback {
-	code?: string,
-	state?: string
+export interface IProviderCallbackEvent {
+	provider: string,
+	stage: string,
+	host: string,
+	code: string,
+	state: string
 }
 
 export interface IProviderCallbackOptions {

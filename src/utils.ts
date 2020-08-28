@@ -20,7 +20,7 @@ export class Utils {
 	 * @param url {string} url base
 	 * @param params {object} url params
 	 */
-	static urlBuilder(url: string, params: Object) {
+	static urlBuilder(url: string, params: object) {
 		return `${url}?${this.urlParams(params)}`;
 	}
 
@@ -28,13 +28,12 @@ export class Utils {
 	 * Creates &amp; separated params string
 	 * @param params {object}
 	 */
-	static urlParams(params: Object) {
-		const result =
-			(Object.keys(params) as Array<keyof typeof params>).map((key) => {
-				return params[key] ? `${uncamel(key)}=${params[key]}` : '';
-			}).filter(value => {
-				return !!value;
-			});
+	static urlParams(params: object) {
+		const result: string[] = [];
+		for(const [key, value] of Object.entries(params)) {
+			if(value) result.push(`${uncamel(key)}=${value}`);
+		}
+
 		return result.join('&');
 	}
 

@@ -1,7 +1,7 @@
 // import Promise from 'bluebird'
 import axios from 'axios';
 import { Utils } from './utils';
-import { IProviderCallback, IProviderOptions, IProviderCallbackOptions, IProviderCallbackAdditionalParams } from './interfaces/IProvider';
+import { IProviderCallbackEvent, IProviderOptions, IProviderCallbackOptions, IProviderCallbackAdditionalParams } from './interfaces/IProvider';
 import { IConfigValues } from './interfaces';
 /**
  * Default provider
@@ -33,11 +33,12 @@ export class Provider {
 	};
 
 	public async callback(
-		config: IProviderCallback,
+		event: IProviderCallbackEvent,
 		options: IProviderCallbackOptions,
 		additionalParams: IProviderCallbackAdditionalParams
 	) {
 			const { authorization, profile } = additionalParams
+			console.log(additionalParams);
 			const { id, redirect_uri, secret, provider } = this.config;
 
 			const attemptAuthorize = async () => {
@@ -45,7 +46,7 @@ export class Provider {
 						client_id: id,
 						redirect_uri: redirect_uri,
 						client_secret: secret,
-						code: config.code
+						code: event.code
 					};
 					const payload = {...mandatoryParams, ...authorization};
 					if (options.authorizationMethod === 'GET') {
@@ -72,8 +73,8 @@ export class Provider {
 						throw new Error('No access data');
 					}
 
-					const { access_token, refresh_token } = accessData;
-					const profileToken = { ...access_token, ...profile };
+					const { access_token, refresh_token } = accessData?.data;
+					const profileToken = { ...profile, ...{access_token} };
 					const url = Utils.urlBuilder(
 						options.profile_uri || '',
 						profileToken
@@ -81,10 +82,10 @@ export class Provider {
 
 					try {
 						const profileData = await axios.get(url);
-						if (!profileData) {
+						if (!profileData || !profileData.data) {
 							throw new Error('No profile data was returned.');
 						}
-						const profileJson = { ...profileData, ...{ provider: provider, at_hash: access_token, offline_access: refresh_token || '' } };
+						const profileJson = { ...profileData.data, ...{ provider: provider, at_hash: access_token, offline_access: refresh_token || '' } };
 						const mappedProfile = options?.profileMap
 							? options.profileMap(profileJson)
 							: profileJson
@@ -96,7 +97,7 @@ export class Provider {
 			
 			const accessData = await attemptAuthorize();
 			const mappedProfile = await createMappedProfile(accessData);
-			const state = config.state;
+			const state = event.state;
 			return { ...{ state }, ...mappedProfile };
 		}
 }

@@ -30,7 +30,6 @@
   "scripts": {
     "compile": "tsc",
     "prepublish": "npm run compile && npm run test",
-    "test": "./node_modules/.bin/jest test",
-    "lint": "eslint src --fix"
+    "test": "./node_modules/.bin/jest test"
   }
 }
