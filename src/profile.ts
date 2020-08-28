@@ -2,21 +2,24 @@
  * Profile class that normalizes profile data fetched from authentication provider
  */
 
-function formatAddress(address) {
-  const result = address
+function formatAddress(address: { formatted?: string, street_address?: string, postal_code: string, locality?: string, country?: string}) {
+  const result = address;
   if (result) {
     result.formatted =
-      `${result.street_address}\n${result.postal_code} ${result.locality}\n${result.country}`
-    return result
+      `${result.street_address}\n${result.postal_code} ${result.locality}\n${result.country}`;
+    return result;
   }
-  return null
+  return null;
 }
 
-class Profile {
+export class Profile {
+  _raw: any;
+  [key: string]: any;
   /**
    * @param data {object}
    */
-  constructor(data) {
+  
+  constructor(data: any) {
     const fields = [
       '_raw',
       'address',
@@ -43,7 +46,7 @@ class Profile {
       'website',
       'zoneinfo'
     ]
-    this._raw = data // eslint-disable-line no-underscore-dangle
+    this._raw = data; // eslint-disable-line no-underscore-dangle
     fields.forEach((field) => {
       if (Object.hasOwnProperty.call(data, field)) {
         const value = data[field]
@@ -55,8 +58,4 @@ class Profile {
       }
     })
   }
-}
-
-module.exports = {
-  Profile
 }

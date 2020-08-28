@@ -1,5 +1,8 @@
+/**
+ * @jest-environment node
+ */
 const nock = require('nock')
-const { Provider, Profile, config } = require('./index')
+const { Provider, Profile, config } = require('../lib/index')
 
 describe('Provider', () => {
   beforeAll(() => {

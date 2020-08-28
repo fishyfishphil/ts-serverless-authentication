@@ -1,6 +1,6 @@
 const crypto = require('crypto')
-const { utils } = require('./index')
-const { config } = require('./index')
+const { utils } = require('../lib/index')
+const { config } = require('../lib/index')
 
 describe('Utils', () => {
   beforeAll(() => {
