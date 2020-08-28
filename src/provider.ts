@@ -38,7 +38,6 @@ export class Provider {
 		additionalParams: IProviderCallbackAdditionalParams
 	) {
 			const { authorization, profile } = additionalParams
-			console.log(additionalParams);
 			const { id, redirect_uri, secret, provider } = this.config;
 
 			const attemptAuthorize = async () => {
