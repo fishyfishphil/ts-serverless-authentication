@@ -42,7 +42,7 @@ export class Utils {
 	 * @param data {object}
 	 * @param config {object} with token_secret --> change to secret
 	 */
-	static createToken(data: object, secret: string, options: object) {
+	static createToken(data: object, secret: string, options?: object) {
 		return jwt.sign(data, secret, options);
 	}
 
@@ -51,7 +51,7 @@ export class Utils {
 	 * @param token {string}
 	 * @param config {object} with token_secret --> change to secret
 	 */
-	static readToken(token: string, secret: string, options: object) {
+	static readToken(token: string, secret: string, options?: object) {
 		return jwt.verify(token, secret, options);
 	}
 
@@ -61,12 +61,12 @@ export class Utils {
 	 * @param config {redirect_client_uri {string}, token_secret {string}}
 	 */
 	static tokenResponse(data: any, config: { redirect_client_uri: string, token_secret: string }) {
-		const { payload, options } = data.authorizationToken
+		const { payload, options } = data.authorizationToken;
 		const params =
 			Object.assign({}, data, {
 				authorizationToken: this.createToken(payload, config.token_secret, options)
 			})
-		return { url: this.urlBuilder(config.redirect_client_uri, params) }
+		return { url: this.urlBuilder(config.redirect_client_uri, params) };
 	}
 
 	/**
@@ -75,7 +75,7 @@ export class Utils {
 	 * @param config {redirect_client_uri {string}}
 	 */
 	static errorResponse(params: object, config: { redirect_client_uri: string }) {
-		return { url: this.urlBuilder(config.redirect_client_uri, params) }
+		return { url: this.urlBuilder(config.redirect_client_uri, params) };
 	}
 
 	/**
@@ -92,7 +92,7 @@ export class Utils {
 			Action: 'execute-api:Invoke',
 			Effect: effect,
 			Resource: resource
-		}
+		};
 
 		const policyDocument: IPolicyDocument = {
 			Version: '2012-10-17',
@@ -104,6 +104,6 @@ export class Utils {
 			policyDocument: policyDocument
 		};
 
-		return authResponse
+		return authResponse;
 	}
 }
