@@ -3,4 +3,14 @@ export { Profile } from './profile';
 export { Utils as utils } from './utils';
 export { config } from './config';
 export { Provider } from './provider';
-export * from './interfaces';
+export { 
+	IAuthResponse,
+	IConfig,
+	IConfigValues,
+	ILocalConfig,
+	IPolicyDocument,
+	IProviderCallbackAdditionalParams,
+	IProviderCallbackEvent,
+	IProviderCallbackOptions,
+	IProviderOptions,
+	IStatement } from './interfaces';
