@@ -46,14 +46,14 @@ export class Profile {
 			'website',
 			'zoneinfo'
 		]
-		this._raw = data; // eslint-disable-line no-underscore-dangle
+		this._raw = data;
 		fields.forEach((field) => {
 			if (Object.hasOwnProperty.call(data, field)) {
-				const value = data[field]
+				const value = data[field];
 				if (field === 'address') {
-					this.address = formatAddress(data.address)
+					this.address = formatAddress(data.address);
 				} else {
-					this[field] = value || null
+					this[field] = value || null;
 				}
 			}
 		})
