@@ -1,12 +1,20 @@
 import { Profile } from "../profile";
 
-export interface IProviderOptions {
-	signin_uri: string,
+interface SharedProviderOptions {
 	scope?: string, 
 	state?: string, 
 	response_type?: string, 
 	access_type?: string,
-	prompt?: string
+	prompt?: string	
+}
+
+export interface IProviderSignInOptions extends SharedProviderOptions {
+	client_id: string,
+	redirect_uri: string
+}
+
+export interface IProviderOptions extends SharedProviderOptions {
+	signin_uri: string
 }
 
 export interface IProviderCallbackEvent {

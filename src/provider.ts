@@ -1,8 +1,12 @@
-// import Promise from 'bluebird'
 import axios from 'axios';
 import { Utils } from './utils';
-import { IProviderCallbackEvent, IProviderOptions, IProviderCallbackOptions, IProviderCallbackAdditionalParams } from './interfaces/IProvider';
-import { IConfigValues } from './interfaces';
+import { IConfigValues,
+	IProviderCallbackEvent,
+	IProviderOptions,
+	IProviderCallbackOptions,
+	IProviderCallbackAdditionalParams,
+	IProviderSignInOptions } from './interfaces';
+
 /**
  * Default provider
  */
@@ -19,14 +23,15 @@ export class Provider {
 			throw new Error(message);
 		}
 
-		let params: { [key: string]: string } = {};
-		params.client_id = this.config.id,
-		params.redirect_uri = this.config.redirect_uri
-		params.response_type = config.response_type || '';
-		params.scope = config.scope || '';
-		params.state = config.state || '';
-		params.access_type = config.access_type || '';
-		params.prompt = config.prompt || '';
+		let params: IProviderSignInOptions = {
+			client_id: this.config.id,
+			redirect_uri: this.config.redirect_uri,
+			response_type: config.response_type || '',
+			scope: config.scope || '',
+			access_type: config.access_type || '',
+			prompt: config.prompt || '',
+			state: config.state || ''
+		};
 
 		const url = Utils.urlBuilder(config.signin_uri, params);
 		return { url };

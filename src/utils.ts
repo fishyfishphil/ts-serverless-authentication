@@ -62,14 +62,15 @@ export class Utils {
 	 */
 	static tokenResponse(data: any, config: { redirect_client_uri: string, token_secret: string }) {
 		const { payload, options } = data.authorizationToken;
-		const params =
-			Object.assign({}, data, {
-				authorizationToken: this.createToken(payload, config.token_secret, options)
-			})
+		const params = { 
+			...data, 
+			...{ authorizationToken: this.createToken(payload, config.token_secret, options) }
+		};
 		return { url: this.urlBuilder(config.redirect_client_uri, params) };
 	}
 
 	/**
+	 * 
 	 * Creates error response and triggers callback
 	 * @param params
 	 * @param config {redirect_client_uri {string}}
