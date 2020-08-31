@@ -98,6 +98,17 @@ describe('Utils', () => {
 		})
 	})
 
+	describe('Utils.UndefinedThrow', () => {
+		it('Should throw an error when a value is not supplied', () => {
+			let novalue;
+			try {
+				utils.throwUndefined({novalue});
+			} catch (error) {
+				expect(error.message).toBe('These fields cannot be undefined: novalue');
+			}
+		});
+	});
+
 	describe('Utils.tokenResponse with refresh token', () => {
 		it('should return token response with refresh token', () => {
 			const providerConfig = config({ provider: 'facebook' })

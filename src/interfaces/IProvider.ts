@@ -14,7 +14,7 @@ export interface IProviderSignInOptions extends SharedProviderOptions {
 }
 
 export interface IProviderOptions extends SharedProviderOptions {
-	signin_uri: string
+	signin_uri?: string
 }
 
 export interface IProviderCallbackEvent {

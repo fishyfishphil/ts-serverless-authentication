@@ -1,6 +1,7 @@
 import * as jwt from 'jsonwebtoken'
 import { uncamel } from './uncamel'
 import { IAuthResponse, IConfigValues, IPolicyDocument, IStatement } from './interfaces';
+import { IKeyIndex } from './interfaces/IKeyIndex';
 
 /**
  * Utilities for Serverless Authentication
@@ -85,6 +86,15 @@ export class Utils {
 		return { url: this.urlBuilder(config.redirect_client_uri, params) };
 	}
 
+	/** 
+	 * Simple way to check for undefined value and throw error for multiple fields.
+	*/
+	static throwUndefined = (properties: IKeyIndex, message?: string) : void => {
+		const found = Object.entries(properties).filter(v => !v[1]).map(v => v[0]);
+		const errorMessage = [message, `These fields cannot be undefined: ${found.join(', ')}`].filter(v => !!v);
+		if(found.length !== 0) throw new Error(errorMessage.join('\n'));
+	}
+	
 	/**
 	 * Generates Policy for AWS Api Gateway custom authorize
 	 * @param principalId {string} data for principalId field

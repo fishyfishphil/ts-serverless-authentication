@@ -61,7 +61,7 @@ describe('Provider', () => {
 				data = new Provider(providerConfig).signin(options)
 			} catch (exception) {
 				expect(exception.message).toBe(
-					"Invalid sign in params. client_id: 'undefined' redirect_uri: 'https://api-id.execute-api.eu-west-1.amazonaws.com/dev/authentication/callback/crappyauth'"
+					"Provider - signin()\nThese fields cannot be undefined: client_id, signin_uri"
 				)
 			}
 			expect(data).toBeUndefined()

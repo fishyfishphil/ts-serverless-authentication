@@ -6,6 +6,7 @@ import { IConfigValues,
 	IProviderCallbackOptions,
 	IProviderCallbackAdditionalParams,
 	IProviderSignInOptions } from './interfaces';
+import { utils } from '.';
 
 /**
  * Default provider
@@ -18,14 +19,13 @@ export class Provider {
 	}
 
 	public signin(config: IProviderOptions) {
-		if (!this.config.id || !this.config.redirect_uri) {
-			const message = `Invalid sign in params. client_id: '${this.config.id}' redirect_uri: '${this.config.redirect_uri}'`;
-			throw new Error(message);
-		}
+		const client_id = this.config.id;
+		const { redirect_uri, signin_uri } = { ...this.config, ...config };
+		utils.throwUndefined({ client_id, redirect_uri, signin_uri }, 'Provider - signin()');
 
 		let params: IProviderSignInOptions = {
-			client_id: this.config.id,
-			redirect_uri: this.config.redirect_uri,
+			client_id: client_id || '',
+			redirect_uri: redirect_uri || '',
 			response_type: config.response_type || '',
 			scope: config.scope || '',
 			access_type: config.access_type || '',
@@ -33,7 +33,7 @@ export class Provider {
 			state: config.state || ''
 		};
 
-		const url = Utils.urlBuilder(config.signin_uri, params);
+		const url = Utils.urlBuilder(signin_uri || '', params);
 		return { url };
 	};
 
