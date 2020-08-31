@@ -58,7 +58,7 @@ export class Utils {
 	/**
 	 * Creates token response and triggers callback
 	 * @param data {payload: object, options: object}
-	 * @param config {redirect_client_uri {string}, token_secret {string}}
+	 * @param config: {config: IConfigValues}
 	 */
 	static tokenResponse(data: any, config: IConfigValues) {
 		if(!config.redirect_client_uri || !config.token_secret) {
@@ -76,7 +76,7 @@ export class Utils {
 	 * 
 	 * Creates error response and triggers callback
 	 * @param params
-	 * @param config {redirect_client_uri {string}}
+	 * @param config {config: IConfigValues}
 	 */
 	static errorResponse(params: object, config: IConfigValues ) {
 		if(!config.redirect_client_uri) {
