@@ -1,6 +1,6 @@
 {
   "name": "ts-serverless-authentication",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "license": "MIT",
