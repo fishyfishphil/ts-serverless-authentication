@@ -102,6 +102,6 @@ export class Provider {
 			const accessData = await attemptAuthorize();
 			const mappedProfile = await createMappedProfile(accessData);
 			const state = event.state;
-			return { ...{ state }, ...mappedProfile };
+			return { ...{ state: state }, ...mappedProfile };
 		}
 }
