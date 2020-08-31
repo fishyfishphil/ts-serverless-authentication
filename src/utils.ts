@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken'
 import { uncamel } from './uncamel'
-import { IAuthResponse, IPolicyDocument, IStatement } from './interfaces';
+import { IAuthResponse, IConfigValues, IPolicyDocument, IStatement } from './interfaces';
 
 /**
  * Utilities for Serverless Authentication
@@ -60,7 +60,10 @@ export class Utils {
 	 * @param data {payload: object, options: object}
 	 * @param config {redirect_client_uri {string}, token_secret {string}}
 	 */
-	static tokenResponse(data: any, config: { redirect_client_uri: string, token_secret: string }) {
+	static tokenResponse(data: any, config: IConfigValues) {
+		if(!config.redirect_client_uri || !config.token_secret) {
+			throw new Error(`Undefined: recirect_client_uri ${config.redirect_client_uri} or token_secret ${config.token_secret}`);
+		}
 		const { payload, options } = data.authorizationToken;
 		const params = { 
 			...data, 
@@ -75,7 +78,10 @@ export class Utils {
 	 * @param params
 	 * @param config {redirect_client_uri {string}}
 	 */
-	static errorResponse(params: object, config: { redirect_client_uri: string }) {
+	static errorResponse(params: object, config: IConfigValues ) {
+		if(!config.redirect_client_uri) {
+			throw new Error('Missing redirect_client_uri');
+		}
 		return { url: this.urlBuilder(config.redirect_client_uri, params) };
 	}
 
