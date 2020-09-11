@@ -33,7 +33,7 @@ describe('Config', () => {
 				provider: 'facebook',
 				stage: 'prod',
 				host: 'test-api-id.execute-api.eu-west-1.amazonaws.com'
-			})
+			});
 			expect(providerConfig.id).toBe('fb-mock-id')
 			expect(providerConfig.secret).toBe('fb-mock-secret')
 			expect(providerConfig.redirect_uri).toBe(
@@ -45,11 +45,12 @@ describe('Config', () => {
 		})
 
 		it('tests custom-config', () => {
+			process.env.REDIRECT_URI = 'https://api-id.execute-api.eu-west-1.amazonaws.com/dev/authentication/callback/{provider}'
 			const providerConfig = config({ provider: 'custom-config' })
 			expect(providerConfig.id).toBe('cc-mock-id')
 			expect(providerConfig.secret).toBe('cc-mock-secret')
 			expect(providerConfig.redirect_uri).toBe(
-				'https://test-api-id.execute-api.eu-west-1.amazonaws.com/prod/authentication/callback/custom-config'
+				'https://api-id.execute-api.eu-west-1.amazonaws.com/dev/authentication/callback/custom-config'
 			)
 			expect(providerConfig.redirect_client_uri).toBe(
 				'http://localhost:3000/auth/custom-config/'
@@ -61,7 +62,7 @@ describe('Config', () => {
 			expect(providerConfig.id).toBe('cc-mock-id')
 			expect(providerConfig.secret).toBe('cc-mock-secret')
 			expect(providerConfig.redirect_uri).toBe(
-				'https://test-api-id.execute-api.eu-west-1.amazonaws.com/prod/authentication/callback/custom_config'
+				'https://api-id.execute-api.eu-west-1.amazonaws.com/dev/authentication/callback/custom_config'
 			)
 			expect(providerConfig.redirect_client_uri).toBe(
 				'http://localhost:3000/auth/custom_config/'

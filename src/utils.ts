@@ -3,6 +3,8 @@ import { uncamel } from './uncamel'
 import { IAuthResponse, IConfigValues, IPolicyDocument, IStatement } from './interfaces';
 import { IKeyIndex } from './interfaces/IKeyIndex';
 
+type signObject = { payload: string | object | Buffer, secretOrPrivateKey: jwt.Secret, options?: jwt.SignOptions, callback?: jwt.SignCallback };
+
 /**
  * Utilities for Serverless Authentication
  */
@@ -12,8 +14,12 @@ export class Utils {
 	 * @param url {string} url base
 	 * @param provider {string} provider e.g. facebook
 	 */
-	static redirectUrlBuilder(url: string, provider: string) {
-		return url.replace(/{provider}/g, provider);
+	static redirectUrlBuilder(url: string, replacers: { provider: string, stage?: string }) {
+		url = url.replace(/{provider}/g, replacers.provider);
+		if(replacers.stage) {
+			url = url.replace(/{stage}/g, replacers.stage);
+		}
+		return url;
 	}
 
 	/**
@@ -43,8 +49,15 @@ export class Utils {
 	 * @param data {object}
 	 * @param config {object} with token_secret --> change to secret
 	 */
-	static createToken(data: object, secret: string, options?: object) {
-		return jwt.sign(data, secret, options);
+	static async createToken(data: string | object | Buffer, secret: jwt.Secret, options?: jwt.SignOptions) {
+			return new Promise((resolve, reject) => {
+				const callback = (err: any, encoded?: string) => {
+					if(err) return reject(err);
+					else return resolve(encoded);
+				};
+				if(options) jwt.sign(data, secret, options, callback);
+				else jwt.sign(data, secret, callback);
+			});	
 	}
 
 	/**
@@ -52,8 +65,15 @@ export class Utils {
 	 * @param token {string}
 	 * @param config {object} with token_secret --> change to secret
 	 */
-	static readToken(token: string, secret: string, options?: object) {
-		return jwt.verify(token, secret, options);
+	static async readToken(token: string, secret: string, options?: object) {
+		return new Promise((resolve, reject) => {
+			const callback = (err: any, decoded: any) => {
+				if(err) return reject(err);
+				else return resolve(decoded);
+			};
+			if(options) jwt.verify(token, secret, options, callback);
+			else jwt.verify(token, secret, callback);
+		});
 	}
 
 	/**
@@ -61,16 +81,21 @@ export class Utils {
 	 * @param data {payload: object, options: object}
 	 * @param config: {config: IConfigValues}
 	 */
-	static tokenResponse(data: any, config: IConfigValues) {
+	static async tokenResponse(data: any, config: IConfigValues) {
 		if(!config.redirect_client_uri || !config.token_secret) {
 			throw new Error(`Undefined: recirect_client_uri ${config.redirect_client_uri} or token_secret ${config.token_secret}`);
 		}
 		const { payload, options } = data.authorizationToken;
-		const params = { 
-			...data, 
-			...{ authorizationToken: this.createToken(payload, config.token_secret, options) }
-		};
-		return { url: this.urlBuilder(config.redirect_client_uri, params) };
+		try {
+			const authToken = await this.createToken(payload, config.token_secret, options);
+			const params = { 
+				...data, 
+				...{ authorizationToken: authToken }
+			};
+			return { url: this.urlBuilder(config.redirect_client_uri, params) };
+		} catch(error) {
+			throw new Error(`tokenResponse error: ${error}`);
+		}
 	}
 
 	/**
@@ -122,5 +147,12 @@ export class Utils {
 		};
 
 		return authResponse;
+	}
+
+	static hasKeys(item: object): boolean {
+		for(const key in item) {
+			if(key) return true;
+		}
+		return false;
 	}
 }

@@ -20,7 +20,7 @@ describe('Utils', () => {
 		it('should replace {provider} with facebook in url', () => {
 			// Change to use config
 			const testUrl = 'https://api.laardee.com/signin/{provider}'
-			const builtUrl = utils.redirectUrlBuilder(testUrl, 'facebook')
+			const builtUrl = utils.redirectUrlBuilder(testUrl, { provider: 'facebook' })
 			expect(builtUrl).toBe('https://api.laardee.com/signin/facebook')
 		})
 	})
@@ -39,9 +39,9 @@ describe('Utils', () => {
 	})
 
 	describe('Utils.createToken', () => {
-		it('should create new token', () => {
+		it('should create new token', async () => {
 			const providerConfig = config('facebook')
-			const token = utils.createToken(
+			const token = await utils.createToken(
 				{ foo: 'bar' },
 				providerConfig.token_secret,
 				{ expiresIn: 1 }
@@ -56,22 +56,22 @@ describe('Utils', () => {
 	})
 
 	describe('Utils.readToken', () => {
-		it('should read token', () => {
+		it('should read token', async () => {
 			const { token_secret } = config({ provider: 'facebook' })
-			const token = utils.createToken({ foo: 'bar' }, token_secret, {
+			const token = await utils.createToken({ foo: 'bar' }, token_secret, {
 				expiresIn: 60
 			})
-			const data = utils.readToken(token, token_secret)
+			const data = await utils.readToken(token, token_secret);
 			expect(data.foo).toBe('bar')
 		})
 
-		it('should fail to read expired token', () => {
+		it('should fail to read expired token', async () => {
 			const { token_secret } = config({ provider: 'facebook' })
-			const token = utils.createToken({ foo: 'bar' }, token_secret, {
+			const token = await utils.createToken({ foo: 'bar' }, token_secret, {
 				expiresIn: 0
 			})
 			try {
-				utils.readToken(token, token_secret)
+				await utils.readToken(token, token_secret)
 			} catch (error) {
 				expect(error.name).toBe('TokenExpiredError')
 				expect(error.message).toBe('jwt expired')
@@ -79,22 +79,21 @@ describe('Utils', () => {
 		})
 	})
 
-	describe('Utils.tokenResponse', () => {
-		it('should return token response', () => {
+	describe('Utils.tokenResponse', async () => {
+		it('should return token response', async () => {
 			const providerConfig = config({ provider: 'facebook' })
 			const authorizationToken = {
 				payload: {
 					id: 'bar'
 				},
 				options: {
-					expiresIn: 60
+					expiresIn: '60m'
 				}
 			}
-			expect(
-				utils.tokenResponse({ authorizationToken }, providerConfig).url
-			).toMatch(
+			const tokenResponse = await utils.tokenResponse({ authorizationToken }, providerConfig);  
+			expect(tokenResponse.url).toMatch(
 				/http:\/\/localhost:3000\/auth\/facebook\/(\D)*[a-zA-Z0-9-_]+?.[a-zA-Z0-9-_]+?.([a-zA-Z0-9-_]+)[a-zA-Z0-9-_]+?$/
-			)
+			);	
 		})
 	})
 
@@ -109,8 +108,8 @@ describe('Utils', () => {
 		});
 	});
 
-	describe('Utils.tokenResponse with refresh token', () => {
-		it('should return token response with refresh token', () => {
+	describe('Utils.tokenResponse with refresh token', async () => {
+		it('should return token response with refresh token', async () => {
 			const providerConfig = config({ provider: 'facebook' })
 			const id = 'bar'
 			const time = new Date().getTime()
@@ -122,15 +121,11 @@ describe('Utils', () => {
 					id
 				},
 				options: {
-					expiresIn: 15
+					expiresIn: '15m'
 				}
 			}
-			expect(
-				utils.tokenResponse(
-					{ authorizationToken, refreshToken, id },
-					providerConfig
-				).url
-			).toMatch(
+			const tokenResponse = await utils.tokenResponse({ authorizationToken, refreshToken, id }, providerConfig);
+			expect(tokenResponse.url).toMatch(
 				/http:\/\/localhost:3000\/auth\/facebook\/\?authorization_token=[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?&refresh_token=[A-Fa-f0-9]{64}&id=.+$/
 			)
 		})
