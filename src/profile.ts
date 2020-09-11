@@ -13,7 +13,7 @@ function formatAddress(address: { formatted?: string, street_address?: string, p
 }
 
 export class Profile {
-	_raw: any;
+	_raw?: any;
 	[key: string]: any;
 	/**
 	 * @param data {object}
@@ -45,7 +45,7 @@ export class Profile {
 			'updated_at',
 			'website',
 			'zoneinfo'
-		]
+		];
 		this._raw = data;
 		fields.forEach((field) => {
 			if (Object.hasOwnProperty.call(data, field)) {
