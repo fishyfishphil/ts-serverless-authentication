@@ -18,9 +18,9 @@ export interface IProviderOptions extends SharedProviderOptions {
 }
 
 export interface IProviderCallbackEvent {
-	provider: string;
-	stage: string;
-	host: string;
+	provider?: string;
+	stage?: string;
+	host?: string;
 	code: string;
 	state: string;
 }
