@@ -29,7 +29,7 @@ describe('Provider', () => {
 			}
 			const data = new Provider(providerConfig).signin(options)
 			expect(data.url).toBe(
-				'https://auth.laardee.com/signin/facebook?client_id=fb-mock-id&redirect_uri=https://api-id.execute-api.eu-west-1.amazonaws.com/dev/authentication/callback/facebook&scope=email&state=state-123'
+				'https://auth.laardee.com/signin/facebook?client_id=fb-mock-id&redirect_uri=https%3A%2F%2Fapi-id.execute-api.eu-west-1.amazonaws.com%2Fdev%2Fauthentication%2Fcallback%2Ffacebook&scope=email&state=state-123'
 			)
 		})
 
@@ -43,7 +43,7 @@ describe('Provider', () => {
 			}
 			const data = new Provider(providerConfig).signin(options)
 			expect(data.url).toBe(
-				'https://auth.laardee.com/signin/custom-config?client_id=cc-mock-id&redirect_uri=https://api-id.execute-api.eu-west-1.amazonaws.com/dev/authentication/callback/custom-config&scope=email&state=state-123'
+				'https://auth.laardee.com/signin/custom-config?client_id=cc-mock-id&redirect_uri=https%3A%2F%2Fapi-id.execute-api.eu-west-1.amazonaws.com%2Fdev%2Fauthentication%2Fcallback%2Fcustom-config&scope=email&state=state-123'
 			)
 		})
 

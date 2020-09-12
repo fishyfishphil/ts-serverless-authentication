@@ -136,7 +136,7 @@ describe('Utils', () => {
 			const providerConfig = config({ provider: 'crappy-provider' })
 			const params = { error: 'Invalid provider' }
 			expect(utils.errorResponse(params, providerConfig).url).toBe(
-				'http://localhost:3000/auth/crappy-provider/?error=Invalid provider'
+				'http://localhost:3000/auth/crappy-provider/?error=Invalid%20provider'
 			)
 		})
 	})
