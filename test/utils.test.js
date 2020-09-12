@@ -35,7 +35,17 @@ describe('Utils', () => {
 			expect(builtUrl).toBe(
 				'https://api.laardee.com/callback/facebook?foo=bar'
 			)
-		})
+		});
+
+		it('should be able to encode a value with a space', () => {
+			const builtUrl = utils.urlBuilder(
+				'https://api.laardee.com/callback/facebook',
+				{ foo: 'profile email' }
+			);
+			expect(builtUrl).toBe(
+				'https://api.laardee.com/callback/facebook?foo=profile%20email'
+			);
+		});
 	})
 
 	describe('Utils.createToken', () => {

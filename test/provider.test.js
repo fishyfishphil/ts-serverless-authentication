@@ -24,12 +24,12 @@ describe('Provider', () => {
 			const providerConfig = config({ provider })
 			const options = {
 				signin_uri: `https://auth.laardee.com/signin/${provider}`,
-				scope: 'email',
+				scope: 'profile email',
 				state: 'state-123'
 			}
 			const data = new Provider(providerConfig).signin(options)
 			expect(data.url).toBe(
-				'https://auth.laardee.com/signin/facebook?client_id=fb-mock-id&redirect_uri=https%3A%2F%2Fapi-id.execute-api.eu-west-1.amazonaws.com%2Fdev%2Fauthentication%2Fcallback%2Ffacebook&scope=email&state=state-123'
+				'https://auth.laardee.com/signin/facebook?client_id=fb-mock-id&redirect_uri=https%3A%2F%2Fapi-id.execute-api.eu-west-1.amazonaws.com%2Fdev%2Fauthentication%2Fcallback%2Ffacebook&scope=profile%20email&state=state-123'
 			)
 		})
 
