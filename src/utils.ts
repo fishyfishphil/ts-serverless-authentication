@@ -3,8 +3,6 @@ import { uncamel } from './uncamel'
 import { IAuthResponse, IConfigValues, IPolicyDocument, IStatement } from './interfaces';
 import { IKeyIndex } from './interfaces/IKeyIndex';
 
-type signObject = { payload: string | object | Buffer, secretOrPrivateKey: jwt.Secret, options?: jwt.SignOptions, callback?: jwt.SignCallback };
-
 /**
  * Utilities for Serverless Authentication
  */
@@ -38,7 +36,7 @@ export class Utils {
 	static urlParams(params: object) {
 		const result: string[] = [];
 		for(const [key, value] of Object.entries(params)) {
-			if(value) result.push(`${uncamel(key)}=${value}`);
+			if(value) result.push(`${encodeURIComponent(uncamel(key))}=${encodeURIComponent(value)}`);
 		}
 
 		return result.join('&');
