@@ -1,8 +1,10 @@
 const _ = require('lodash')
-const { Profile } = require('../lib/index')
+const { Profile } = require('../src/index')
+import { expect } from 'chai';
+import 'mocha';
 
 describe('Profile', () => {
-	beforeAll(() => {
+	beforeEach(() => {
 		process.env.PROVIDER_FACEBOOK_ID = 'fb-mock-id'
 		process.env.PROVIDER_FACEBOOK_SECRET = 'fb-mock-secret'
 
@@ -52,18 +54,18 @@ describe('Profile', () => {
 			const data = _.assign({}, response, { _raw: response })
 			const profile = new Profile(data)
 
-			expect(profile.id).toBe('12345')
-			expect(profile.name).toBe('Eetu Tuomala')
-			expect(profile.email).toBe('email@test.com')
-			expect(profile.picture).toBe(
+			expect(profile.id).to.be.equal('12345')
+			expect(profile.name).to.be.equal('Eetu Tuomala')
+			expect(profile.email).to.be.equal('email@test.com')
+			expect(profile.picture).to.be.equal(
 				'https://avatars3.githubusercontent.com/u/4726921?v=3&s=460'
 			)
-			expect(profile.provider).toBe('facebook')
-			expect(profile.address.formatted).toBe(
+			expect(profile.provider).to.be.equal('facebook')
+			expect(profile.address.formatted).to.be.equal(
 				'Urho Kekkosen Katu 7B\n00100 Helsinki\nFinland'
 			)
-			expect(profile).not.toHaveProperty('extra')
-			expect(profile._raw).toHaveProperty('extra') // eslint-disable-line no-underscore-dangle
+			expect(profile).not.to.haveOwnProperty('extra')
+			expect(profile._raw).to.haveOwnProperty('extra') // eslint-disable-line no-underscore-dangle
 		})
 	})
 })

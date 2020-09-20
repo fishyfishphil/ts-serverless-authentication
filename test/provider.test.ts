@@ -2,10 +2,12 @@
  * @jest-environment node
  */
 const nock = require('nock')
-const { Provider, Profile, config } = require('../lib/index')
+const { Provider, Profile, config } = require('../src/index')
+import { expect } from 'chai';
+import 'mocha';
 
 describe('Provider', () => {
-	beforeAll(() => {
+	beforeEach(() => {
 		process.env.PROVIDER_FACEBOOK_ID = 'fb-mock-id'
 		process.env.PROVIDER_FACEBOOK_SECRET = 'fb-mock-secret'
 
@@ -28,7 +30,7 @@ describe('Provider', () => {
 				state: 'state-123'
 			}
 			const data = new Provider(providerConfig).signin(options)
-			expect(data.url).toBe(
+			expect(data.url).to.be.equal(
 				'https://auth.laardee.com/signin/facebook?client_id=fb-mock-id&redirect_uri=https%3A%2F%2Fapi-id.execute-api.eu-west-1.amazonaws.com%2Fdev%2Fauthentication%2Fcallback%2Ffacebook&scope=profile%20email&state=state-123'
 			)
 		})
@@ -42,7 +44,7 @@ describe('Provider', () => {
 				state: 'state-123'
 			}
 			const data = new Provider(providerConfig).signin(options)
-			expect(data.url).toBe(
+			expect(data.url).to.be.equal(
 				'https://auth.laardee.com/signin/custom-config?client_id=cc-mock-id&redirect_uri=https%3A%2F%2Fapi-id.execute-api.eu-west-1.amazonaws.com%2Fdev%2Fauthentication%2Fcallback%2Fcustom-config&scope=email&state=state-123'
 			)
 		})
@@ -51,7 +53,7 @@ describe('Provider', () => {
 			const provider = 'crappyauth'
 			const providerConfig = config({ provider })
 			const options = {
-				authorization_url: 'https://auth.laardee.com/signin/',
+				authorizationURL: 'https://auth.laardee.com/signin/',
 				scope: 'email',
 				state: 'state-123'
 			}
@@ -60,16 +62,16 @@ describe('Provider', () => {
 			try {
 				data = new Provider(providerConfig).signin(options)
 			} catch (exception) {
-				expect(exception.message).toBe(
+				expect(exception.message).to.be.equal(
 					"Provider - signin()\nThese fields cannot be undefined: client_id, signin_uri"
 				)
 			}
-			expect(data).toBeUndefined()
+			expect(data).to.be.undefined
 		})
 	})
 
 	describe('Callback', () => {
-		beforeAll(() => {
+		beforeEach(() => {
 			nock('https://auth.laardee.com')
 				.post('/auth')
 				.reply(200, {
@@ -110,7 +112,7 @@ describe('Provider', () => {
 			const provider = 'facebook'
 			const providerConfig = config({ provider })
 
-			const profileMap = (response) =>
+			const profileMap = (response: any) =>
 				new Profile(
 					Object.assign(response, {
 						email: response.email ? response.email.primary : null,
@@ -119,8 +121,8 @@ describe('Provider', () => {
 				)
 
 			const options = {
-				authorization_uri: 'https://auth.laardee.com/auth',
-				profile_uri: 'https://api.laardee.com/me',
+				authorizationURL: 'https://auth.laardee.com/auth',
+				profileURL: 'https://api.laardee.com/me',
 				profileMap
 			}
 
@@ -137,12 +139,12 @@ describe('Provider', () => {
 				additionalParams
 			)
 
-			expect(profile.id).toBe(expectedProfile.id)
-			expect(profile.name).toBe(expectedProfile.name)
-			expect(profile.email).toBe(expectedProfile.email)
-			expect(profile.picture).toBe(expectedProfile.picture)
-			expect(profile.provider).toBe(expectedProfile.provider)
-			return expect(profile.at_hash).toBe('access-token-123')
+			expect(profile.id).to.be.equal(expectedProfile.id)
+			expect(profile.name).to.be.equal(expectedProfile.name)
+			expect(profile.email).to.be.equal(expectedProfile.email)
+			expect(profile.picture).to.be.equal(expectedProfile.picture)
+			expect(profile.provider).to.be.equal(expectedProfile.provider)
+			return expect(profile.at_hash).to.be.equal('access-token-123')
 		})
 	})
 })

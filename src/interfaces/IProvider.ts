@@ -26,9 +26,10 @@ export interface IProviderCallbackEvent {
 }
 
 export interface IProviderCallbackOptions {
-	authorization_uri?: string;
+	authorizationURL?: string;
 	authorizationMethod?: string;
-	profile_uri?: string;
+	profileURL?: string;
+	tokenURL?: string;
 	profileMap?: (response: any) => Profile;
 }
 
@@ -36,4 +37,9 @@ export interface IProviderCallbackAdditionalParams {
 	grant_type?: string;
 	authorization?: object;
 	profile?: Profile;
+}
+
+export interface IProvider {
+	signin: (config: IProviderOptions) => { url: string }
+	callback: (event: IProviderCallbackEvent, options: IProviderCallbackOptions, additionalParams: IProviderCallbackAdditionalParams) => any
 }

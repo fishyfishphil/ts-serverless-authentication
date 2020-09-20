@@ -1,9 +1,10 @@
-const crypto = require('crypto')
-const { utils } = require('../lib/index')
-const { config } = require('../lib/index')
+const crypto = require('crypto');
+const { utils, config } = require('../src/index');
+import { expect } from 'chai';
+import 'mocha';
 
 describe('Utils', () => {
-	beforeAll(() => {
+	beforeEach(() => {
 		process.env.PROVIDER_FACEBOOK_ID = 'fb-mock-id'
 		process.env.PROVIDER_FACEBOOK_SECRET = 'fb-mock-secret'
 
@@ -21,7 +22,7 @@ describe('Utils', () => {
 			// Change to use config
 			const testUrl = 'https://api.laardee.com/signin/{provider}'
 			const builtUrl = utils.redirectUrlBuilder(testUrl, { provider: 'facebook' })
-			expect(builtUrl).toBe('https://api.laardee.com/signin/facebook')
+			expect(builtUrl).to.be.equal('https://api.laardee.com/signin/facebook')
 		})
 	})
 
@@ -32,7 +33,7 @@ describe('Utils', () => {
 				'https://api.laardee.com/callback/facebook',
 				{ foo: 'bar' }
 			)
-			expect(builtUrl).toBe(
+			expect(builtUrl).to.be.equal(
 				'https://api.laardee.com/callback/facebook?foo=bar'
 			)
 		});
@@ -42,7 +43,7 @@ describe('Utils', () => {
 				'https://api.laardee.com/callback/facebook',
 				{ foo: 'profile email' }
 			);
-			expect(builtUrl).toBe(
+			expect(builtUrl).to.be.equal(
 				'https://api.laardee.com/callback/facebook?foo=profile%20email'
 			);
 		});
@@ -56,10 +57,10 @@ describe('Utils', () => {
 				providerConfig.token_secret,
 				{ expiresIn: 1 }
 			)
-			expect(token).toMatch(
+			expect(token).to.match(
 				/[a-zA-Z0-9-_]+?.[a-zA-Z0-9-_]+?.([a-zA-Z0-9-_]+)[a-zA-Z0-9-_]+?$/g
 			)
-			expect(token.split('.')[0]).toBe(
+			expect(token.split('.')[0]).to.be.equal(
 				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
 			)
 		})
@@ -72,7 +73,7 @@ describe('Utils', () => {
 				expiresIn: 60
 			})
 			const data = await utils.readToken(token, token_secret);
-			expect(data.foo).toBe('bar')
+			expect(data.foo).to.be.equal('bar')
 		})
 
 		it('should fail to read expired token', async () => {
@@ -83,8 +84,8 @@ describe('Utils', () => {
 			try {
 				await utils.readToken(token, token_secret)
 			} catch (error) {
-				expect(error.name).toBe('TokenExpiredError')
-				expect(error.message).toBe('jwt expired')
+				expect(error.name).to.be.equal('TokenExpiredError')
+				expect(error.message).to.be.equal('jwt expired')
 			}
 		})
 	})
@@ -101,7 +102,7 @@ describe('Utils', () => {
 				}
 			}
 			const tokenResponse = await utils.tokenResponse({ authorizationToken }, providerConfig);  
-			expect(tokenResponse.url).toMatch(
+			expect(tokenResponse.url).to.match(
 				/http:\/\/localhost:3000\/auth\/facebook\/(\D)*[a-zA-Z0-9-_]+?.[a-zA-Z0-9-_]+?.([a-zA-Z0-9-_]+)[a-zA-Z0-9-_]+?$/
 			);	
 		})
@@ -113,7 +114,7 @@ describe('Utils', () => {
 			try {
 				utils.throwUndefined({novalue});
 			} catch (error) {
-				expect(error.message).toBe('These fields cannot be undefined: novalue');
+				expect(error.message).to.be.equal('These fields cannot be undefined: novalue');
 			}
 		});
 	});
@@ -135,7 +136,7 @@ describe('Utils', () => {
 				}
 			}
 			const tokenResponse = await utils.tokenResponse({ authorizationToken, refreshToken, id }, providerConfig);
-			expect(tokenResponse.url).toMatch(
+			expect(tokenResponse.url).to.match(
 				/http:\/\/localhost:3000\/auth\/facebook\/\?authorization_token=[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?&refresh_token=[A-Fa-f0-9]{64}&id=.+$/
 			)
 		})
@@ -145,7 +146,7 @@ describe('Utils', () => {
 		it('should return error response', () => {
 			const providerConfig = config({ provider: 'crappy-provider' })
 			const params = { error: 'Invalid provider' }
-			expect(utils.errorResponse(params, providerConfig).url).toBe(
+			expect(utils.errorResponse(params, providerConfig).url).to.be.equal(
 				'http://localhost:3000/auth/crappy-provider/?error=Invalid%20provider'
 			)
 		})
@@ -158,7 +159,7 @@ describe('Utils', () => {
 				'Allow',
 				'arn:aws:execute-api:eu-west-1:nnn:nnn/*/GET/'
 			)
-			expect(policy.principalId).toBe('eetu')
+			expect(policy.principalId).to.be.equal('eetu')
 		})
 	})
 })

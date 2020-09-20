@@ -7,14 +7,16 @@ import { IConfigValues,
 	IProviderCallbackAdditionalParams,
 	IProviderSignInOptions } from './interfaces';
 import { utils } from '.';
+import { Provideable } from './abstract/Providable';
 
 /**
  * Default provider
  */
-export class Provider {
+export class Provider extends Provideable {
 	private config: IConfigValues;
 
 	constructor(config: IConfigValues) {
+		super();
 		this.config = config;
 	}
 
@@ -54,20 +56,21 @@ export class Provider {
 					};
 					const payload = {...mandatoryParams, ...authorization};
 					if (options.authorizationMethod === 'GET') {
-						const url = Utils.urlBuilder(options.authorization_uri || '', payload);
+						const url = Utils.urlBuilder(options.authorizationURL || '', payload);
 						try {
+							console.log(url);
 							const accessData = await axios.get(url);
 							return accessData;
 						} catch (error) {
-							throw new Error(`attempAuthorize error GET ${error}`);
+							throw new Error(`attemptAuthorize error GET ${error}`);
 						}
 					}
 					else {
 						try {
-							const accessData = await axios.post(options.authorization_uri || '', { form: payload });
+							const accessData = await axios.post(options.authorizationURL || '', { form: payload });
 							return accessData;
 						} catch (error) {
-							throw new Error(`attempAuthorize error not GET ${error}`);
+							throw new Error(`attemptAuthorize error POST ${error}`);
 						}
 					}
 				}
@@ -80,7 +83,7 @@ export class Provider {
 					const { access_token, refresh_token } = accessData?.data;
 					const profileToken = { ...profile, ...{access_token} };
 					const url = Utils.urlBuilder(
-						options.profile_uri || '',
+						options.profileURL || '',
 						profileToken
 					);
 
