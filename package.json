@@ -41,7 +41,7 @@
       ".tsx"
     ],
     "exclude": [
-      "**/*.d.ts"
+      "**/*.d.ts", "coverage", "lib/*", "src/interfaces", "test"
     ],
     "reporter": [
       "html"
